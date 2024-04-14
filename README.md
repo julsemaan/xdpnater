@@ -1,13 +1,21 @@
 
 # Using
 
-Add this in sysctl
+Add the following in `/etc/sysctl.conf` and run `sysctl -p`
+
 ```
 net.ipv4.ip_forward=1
 ```
 
-Run with
+Install some dependencies
+
 ```
-go generate -v && go build -v && ./ebpf-router
+$ apt install make llvm clang linux-headers-$(uname -r) libc6-dev-i386 libbpf-dev
+```
+
+Run with
+
+```
+$ make run
 ```
 
