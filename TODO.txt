@@ -1,0 +1,12 @@
+- Don´t try to NAT 255.255.255.255
+- Allow to configure which interfaces to setup the program on
+- Free natport on TCP close
+- Free natport on ICMP reply
+- Check if natport entry is older than X time before using it again
+- Replace log.Fatalf in xdpnater
+- ip/mac allowlist for being NATed, XDP_PASS otherwise (or allow configuring XDP_DROP)
+- Source IP rate limit for requesting NAT ports
+
+X Perform cleanup of old entries in NAT table
+  X Counter increments on every natport added, decrements when one is freed (TCP). Counter needs spinlock
+  X User space watches for that counter, when it had increased of x since the last clean, it cleans and records the counter. Need to handle a u64 reset to 0
