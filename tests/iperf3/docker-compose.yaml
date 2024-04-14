@@ -1,0 +1,45 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "iperf3-server"
+    networks:
+      - 0iperf3
+    dns_search: .
+    command: iperf3 -s
+  nater:
+    build:
+      context: ../../.
+      dockerfile: Dockerfile
+    container_name: "xdp-nater"
+    privileged: true
+    networks:
+      - 0iperf3
+      - internal
+    command: /usr/local/bin/xdp-nater run
+    dns_search: .
+    volumes:
+      - "/sys/fs/bpf:/sys/fs/bpf"
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "iperf3-client"
+    privileged: true
+    networks:
+      - internal
+    dns_search: .
+    command: |
+      sh -c "while true; do sleep 1; done"
+
+networks:
+  0iperf3:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_icc: 'true'
+  internal:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_icc: 'true'
+
