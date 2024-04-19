@@ -88,10 +88,12 @@ func setDefaultRouteNatIP(objs *xdpNaterObjects, natInterface string, natip stri
 }
 
 type XdpNater struct {
-	NatIP        string
-	NatInterface string
-	done         chan struct{}
-	objs         xdpNaterObjects
+	NatIP            string
+	NatInterface     string
+	Interfaces       []string
+	interfacesLookup map[string]bool
+	done             chan struct{}
+	objs             xdpNaterObjects
 }
 
 func New() *XdpNater {
@@ -125,6 +127,10 @@ func (x *XdpNater) Run() {
 		log.Fatalf("Unable to list interfaces: %s", err)
 	}
 	for _, iface := range ints {
+		if !x.ShouldRunOnIfname(iface.Name) {
+			continue
+		}
+		log.Print("Attaching to ", iface)
 		// Attach count_packets to the network interface.
 		link, err := link.AttachXDP(link.XDPOptions{
 			Program:   x.objs.XdpNater,
@@ -146,6 +152,19 @@ func (x *XdpNater) Run() {
 		}
 	}
 
+}
+
+func (x *XdpNater) ShouldRunOnIfname(wants string) bool {
+	if len(x.Interfaces) == 0 {
+		return true
+	}
+
+	for _, ifname := range x.Interfaces {
+		if wants == ifname {
+			return true
+		}
+	}
+	return false
 }
 
 type Protocol uint8

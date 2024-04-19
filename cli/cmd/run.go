@@ -4,6 +4,8 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"strings"
+
 	"github.com/julsemaan/ebpf-router/xdpnater"
 	"github.com/spf13/cobra"
 )
@@ -22,12 +24,14 @@ to quickly create a Cobra application.`,
 		x := xdpnater.New()
 		x.NatInterface = natInterface
 		x.NatIP = natIp
+		x.Interfaces = strings.Split(interfaces, ",")
 		x.Run()
 	},
 }
 
 var natInterface string
 var natIp string
+var interfaces string
 
 func init() {
 	rootCmd.AddCommand(runCmd)
@@ -42,4 +46,5 @@ func init() {
 	// is called directly, e.g.:
 	runCmd.Flags().StringVarP(&natIp, "nat-ip", "i", "", "The IP address used for NATing. Will use the first address of the NAT interface if unspecified")
 	runCmd.Flags().StringVarP(&natInterface, "nat-interface", "d", "", "The IP address used for NATing. Will use the first address of the NAT interface if unspecified")
+	runCmd.Flags().StringVarP(&interfaces, "interfaces", "n", "", "A comma-delimited list of interfaces to listen on. Defaults to all if not specified.")
 }
