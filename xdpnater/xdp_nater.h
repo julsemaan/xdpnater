@@ -10,7 +10,7 @@
 // max # of interfaces
 #define MAX_IFACES 16
 
-#define NATPORT_SIZE 4000
+#define NATPORT_SIZE 50000
 #define DRANGE_START 61000
 #define DRANGE_SIZE 4500
 
