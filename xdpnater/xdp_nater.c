@@ -21,7 +21,7 @@
 char _license[] SEC("license") = "GPL";
 
 // #define BPF_TRACE_NAT_CHECKS
-// #define BPF_TRACE_NAT_HITS
+#define BPF_TRACE_NAT_HITS
 
 #define ICMP_PROCOTOL_ID 1
 #define TCP_PROCOTOL_ID 6

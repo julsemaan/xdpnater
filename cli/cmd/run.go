@@ -13,18 +13,15 @@ import (
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Runs the XDP nater",
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		x := xdpnater.New()
 		x.NatInterface = natInterface
 		x.NatIP = natIp
-		x.Interfaces = strings.Split(interfaces, ",")
+		if interfaces != "" {
+			x.Interfaces = strings.Split(interfaces, ",")
+		}
 		x.Run()
 	},
 }
@@ -45,6 +42,6 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	runCmd.Flags().StringVarP(&natIp, "nat-ip", "i", "", "The IP address used for NATing. Will use the first address of the NAT interface if unspecified")
-	runCmd.Flags().StringVarP(&natInterface, "nat-interface", "d", "", "The IP address used for NATing. Will use the first address of the NAT interface if unspecified")
+	runCmd.Flags().StringVarP(&natInterface, "nat-interface", "d", "", "The interface used for NATing. Will use the interface of the default gateway if not specified.")
 	runCmd.Flags().StringVarP(&interfaces, "interfaces", "n", "", "A comma-delimited list of interfaces to listen on. Defaults to all if not specified.")
 }
