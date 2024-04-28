@@ -60,13 +60,13 @@ The NAT table uses a dedicated port range (61000-65500) that is outside of the d
 
 ## Connection pruning
 
-TCP/UDP connections are automatically pruned from the NAT table after 10 seconds of inactivity, ICMP connections are pruned when an echo reply is seen (or 10 seconds after the echo request, whichever comes first).
+TCP/UDP connections are automatically pruned from the NAT table after 10 seconds of inactivity, ICMP connections are pruned when an associated echo reply is seen (or 10 seconds after the echo request, whichever comes first).
 
 There is no detection of connection close outside of what is described above, meaning that TCP connections closing are not being detected and will be cleaned using the inactivity timeout.
 
 ## NAT port scope
 
-A NAT port is scoped to the destination address, which means the same NAT port (ex: 61001) can be used multiple times as long as the destination address is different. This allows the NAT table to be much larger than the available pool of ports. The NAT table size is set to 50K entries but it could easily be set to a much higher number if necessary. One limitation of the current implementation is that no more than 4500 concurrent connections can be maintained to a desination address and no more than 4500 connections can be opened/closed in a 10 second window to a destination address (due to the inactivity timeout used for pruning the table)
+A NAT port is scoped to the destination address, which means the same NAT port (ex: 61001) can be used multiple times as long as the destination address is different. This allows the NAT table to be much larger than the available pool of ports. The NAT table size is set to 50K entries but it could easily be set to a much higher number if necessary. One limitation of the current implementation is that no more than 4500 concurrent connections can be maintained to a desination address and no more than 4500 TCP/UDP connections can be opened/closed in a 10 second window to a destination address (due to the inactivity timeout used for pruning the table)
 
 ## Tuning for higher connections and NAT table size
 
